@@ -70,3 +70,13 @@ Notes:
 * communicating the last bin index when roundtrip is configured - can be done on top of OfferedHashes message (alongside the hashes), or to reuse the ACK from the no-roundtrip config
 * two notions of bounded - on the stream level and on the localstore
 * if TO is not specified - we assume unbounded stream, and we just send whatever, until at most, we fill up an entire batch.
+
+
+Message exchange examples:
+
+Initial handshake - client queries server for stream states
+![handshake](https://github.com/ethersphere/swarm/tree/stream-spec/docs/diagrams/stream-handshake.svg "Handshake")
+
+GetRange (bounded) - client requests a bounded range within a stream
+![bounded-range](https://github.com/ethersphere/swarm/tree/stream-spec/docs/diagrams/stream-bounded.svg "Bounded GetRange")
+
