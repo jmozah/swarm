@@ -80,3 +80,4 @@ Initial handshake - client queries server for stream states
 GetRange (bounded) - client requests a bounded range within a stream
 ![bounded-range](https://github.com/ethersphere/swarm/tree/stream-spec/docs/diagrams/stream-bounded.svg "Bounded GetRange")
 
+GetRange (unbounded) - client requests an unbounded range (specifies only `From` parameter)
