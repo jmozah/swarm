@@ -4,8 +4,8 @@ stream! protocol
 
 ### definition of stream
 a protocol that facilitates data transmission between two swarm nodes, specifically targeting sequencial data in the form of a sequence of chunks as defined by swarm. the protocol should cater for the following requirements: 
-* client should be able to request arbitrary ranges from the server
-* client can be assumed to have some of the data already and therefore can opt in to selectivally request chunks based on their hashes
+- client should be able to request arbitrary ranges from the server
+- client can be assumed to have some of the data already and therefore can opt in to selectivally request chunks based on their hashes
 
 As mentioned, the client is typically expected to have some of the data in the stream. to mitigate duplicate data transmission the stream protocol provides a configurable message roundtrip before batch delivery which allows the downstream peer to selectively request the chunks which it does not store at the time of the request.
 This comes, expectedly, at a certain price. Since delivery batches are pre-negotiated and do not rely on the mere benevolence of nodes, we can conclude that the delivery batches are optimsed for _urgency_ rather than for maximising batch utilisation (this is however, would be more apparent with unbounded streams).
@@ -23,36 +23,36 @@ both offered and wanted go together - note this
     - **wanted hashes** - at the discretion of the client in response to offered hashes
 
 responsibilities:
-* client is able to request a range but doesnt know how many results the interval will return from the server
-* client does not know if interval is continuous or has gaps
-* range is defined by client and should be strictly respected and followed by server
-* all intervals specified in protocol messages are closed (inclusive)
-* when roundtrip is configured - chunk deliveries can be handled concurrently (therefore their order is not guaranteed), but a server end-of-batch with topmost session index must be sent to signal the end of a batch
-* when roundtrip is not configured - chunks are expected to be sent in order, one after the other
-* when a client requests an unbounded range (i.e. FROM=..., TO=nil):
-    * if there's no chunks available - server waits until something becomes available then send it to the client
-    * server's responsibility to give as much as possible, as fast as possible, with a limit of batch size
-    * one range query should result in ONE rountrip + batch delivery
-* when a client requests a bounded range, server should respond to the client range requests with either offered hashes (if roundtrip is required) or chunks (if not) or an end-of-batch message if there are no more to offer. If none of these responses arrive within a timeout interval, client must drop the upstream peer.
-* the server should always respond to the client
+- client is able to request a range but doesnt know how many results the interval will return from the server
+- client does not know if interval is continuous or has gaps
+- range is defined by client and should be strictly respected and followed by server
+- all intervals specified in protocol messages are closed (inclusive)
+- when roundtrip is configured - chunk deliveries can be handled concurrently (therefore their order is not guaranteed), but a server end-of-batch with topmost session index must be sent to signal the end of a batch
+- when roundtrip is not configured - chunks are expected to be sent in order, one after the other
+- when a client requests an unbounded range (i.e. FROM=..., TO=nil):
+    - if there's no chunks available - server waits until something becomes available then send it to the client
+    - server's responsibility to give as much as possible, as fast as possible, with a limit of batch size
+    - one range query should result in ONE rountrip + batch delivery
+- when a client requests a bounded range, server should respond to the client range requests with either offered hashes (if roundtrip is required) or chunks (if not) or an end-of-batch message if there are no more to offer. If none of these responses arrive within a timeout interval, client must drop the upstream peer.
+- the server should always respond to the client
 
  
 stream termination condition:
  - timeout, connection died, we get an error and remove the client, server also gets an error from p2p layer and removes all servers/clients and drops the peer
 
 considerations:
-* server must make sure that chunk got to client in order to account in SWAP (synchronous). if the send does not result in an error - the send should be accounted
-* there is always a max batch size so that clients cannot grieve servers with very large ranges
+- server must make sure that chunk got to client in order to account in SWAP (synchronous). if the send does not result in an error - the send should be accounted
+- there is always a max batch size so that clients cannot grieve servers with very large ranges
 
 syncing contracts:
- - stream indexes are ALWAYS > 0
+ - stream indexes always > 0
  - syncing is an implementation of the stream protocol
  - client is expected to manage all intervals, and therefore:
  - server is designed to be stateless, except for the case of managing a offered/wanted roundtrip and the knowledge of a boundedness of a stream (e.g. the server knows that syncing streams are always unbounded from the localstore perspective - data can always enter the system, however this is not the case for live video stream for example)
  - the server does not terminate streams - it is at the discretion of the downstream peer
+ - the server does not initiate any messages unless instructed to
  - the server does not instruct client on which bins to subscribe to it
 
-StreamErr - descritpion - stream does not exist error
 
 | Msg Name | From->To | Params   | Example |
 | -------- | -------- | -------- | ------- |
@@ -66,8 +66,7 @@ StreamErr - descritpion - stream does not exist error
 | StreamState | Client<->Server | Stream`string`<br>Code`uint16`<br>Message`string`| `Stream: SYNC\|6, Code:1, Message:"Stream became bounded"`<br>`Stream: SYNC\|5, Code:2, Message: "No such stream"` |
 
 
-
-
+Notes:
 * communicating the last bin index when roundtrip is configured - can be done on top of OfferedHashes message (alongside the hashes), or to reuse the ACK from the no-roundtrip config
 * two notions of bounded - on the stream level and on the localstore
 * if TO is not specified - we assume unbounded stream, and we just send whatever, until at most, we fill up an entire batch.
