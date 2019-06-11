@@ -75,9 +75,14 @@ Notes:
 Message exchange examples:
 
 Initial handshake - client queries server for stream states
-![handshake](https://github.com/ethersphere/swarm/tree/stream-spec/docs/diagrams/stream-handshake.svg "Handshake")
+![handshake](https://github.com/ethersphere/swarm/tree/stream-spec/docs/diagrams/stream-handshake.png "Handshake")
 
 GetRange (bounded) - client requests a bounded range within a stream
-![bounded-range](https://github.com/ethersphere/swarm/tree/stream-spec/docs/diagrams/stream-bounded.svg "Bounded GetRange")
+![bounded-range](https://github.com/ethersphere/swarm/tree/stream-spec/docs/diagrams/stream-bounded.png "Bounded GetRange")
 
 GetRange (unbounded) - client requests an unbounded range (specifies only `From` parameter)
+![unbounded-range](https://github.com/ethersphere/swarm/tree/stream-spec/docs/diagrams/stream-unbounded.png "Unbounded GetRange")
+
+GetRange (no roundtrip) - client requests an unbounded or bounded range with no roundtrip configured
+![unbounded-range](https://github.com/ethersphere/swarm/tree/stream-spec/docs/diagrams/stream-no-roundtrip.png "No Roundtrip GetRange")
+
