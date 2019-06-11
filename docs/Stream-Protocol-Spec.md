@@ -56,14 +56,14 @@ StreamErr - descritpion - stream does not exist error
 
 | Msg Name | From->To | Params   | Example |
 | -------- | -------- | -------- | ------- |
-| Stream   | Client->Server  | Streams`[]string`  | `SYNC|6, SYNC|5`|
-| StreamAck   | Server->Client  | Streams`[]Info` <br>Stream`string`<br>SessionIdx`uint64` <br>Bounded`bool` | `SYNC|6;CUR=1632;bounded, SYNC|7;CUR=18433;bounded` |
-| GetRange | Client->Server| Ruid`uint`<br>Stream `string`<br>From`uint`<br>To`*uint`(nullable)|
-| OfferedHashes | Server->Client| Hashes `[]byte` |
-| WantedHashes | Client->Server | Bitvector`[]byte` |
-| ChunkDelivery | Server->Client | Chunk `[]byte` |
-| BatchDone | Server->Client| Ruid `uint`<br>Last `uint` |
-| StreamErr | Client<->Server |Code `uint16`<br>Message`string`|
+| Stream   | Client->Server  | Streams`[]string` | `SYNC\|6, SYNC\|5` |
+| StreamAck   | Server->Client  | Streams`[]Info` <br>Stream`string`<br>SessionIdx`uint64` <br>Bounded`bool` | `SYNC\|6;CUR=1632;bounded, SYNC\|7;CUR=18433;bounded` |
+| GetRange | Client->Server| Ruid`uint`<br>Stream `string`<br>From`uint`<br>To`*uint`(nullable) | `Stream: SYNC\|6, From: 1, To: 100`(bounded)<br>`Stream: SYNC\|7, From: 109`(unbounded) | 
+| OfferedHashes | Server->Client| Ruid`uint`<br>Hashes `[]byte` | `Hashes: [cbcbbaddda, bcbbbdbbdc, ....]` |
+| WantedHashes | Client->Server | Ruid`uint`<br>Bitvector`[]byte` | `Bitvector: [0100100100] ` |
+| ChunkDelivery | Server->Client | Chunk `[]byte` | `Stream: SYNC\|6, Chunk: [001000101]` |
+| BatchDone | Server->Client| Ruid `uint`<br>Last `uint` | `Ruid: 21321, Last: 113331` |
+| StreamState | Client<->Server | Stream`string`<br>Code`uint16`<br>Message`string`| `Stream: SYNC\|6, Code:1, Message:"Stream became bounded"`<br>`Stream: SYNC\|5, Code:2, Message: "No such stream"` |
 
 
 
